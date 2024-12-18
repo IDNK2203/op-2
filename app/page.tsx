@@ -8,7 +8,8 @@ import {
   useMutation,
   useQuery,
 } from "convex/react";
-// import { } from "../convex/_generated/api";
+import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function Home() {
   const clickMeCaller = useMutation(api.documents.createDocument);
@@ -22,13 +23,14 @@ export default function Home() {
         <Authenticated>
           <UserButton />
           {/* <Content /> */}
-          <button
+          <ModeToggle />
+          <Button
             onClick={() => {
               clickMeCaller({ title: "Mid Summer Winter" });
             }}
           >
             click me
-          </button>
+          </Button>
           <div>
             {fetchedDocs?.map((el, i) => (
               <p className="border border-green-400 mt-1 p-2" key={i}>
@@ -41,8 +43,3 @@ export default function Home() {
     </div>
   );
 }
-
-// function Content() {
-//   const messages = useQuery(api.messages.getForCurrentUser);
-//   return <div>Authenticated content: {messages?.length}</div>;
-// }
