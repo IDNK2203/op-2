@@ -1,9 +1,9 @@
-import { SignInButton, UserButton } from "@clerk/clerk-react";
-// import { Button } from "@/components/ui/button";
+import { SignInButton } from "@clerk/clerk-react";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import { Authenticated, Unauthenticated } from "convex/react";
+import { Unauthenticated } from "convex/react";
 import Image from "next/image";
 import Logo from "../public/images/op-2-logo.png";
+import HeaderActions from "./header-actions";
 
 function Header() {
   return (
@@ -15,12 +15,10 @@ function Header() {
         <Unauthenticated>
           <SignInButton />
         </Unauthenticated>
-        <Authenticated>
-          <div className="flex space-x-2 items-center">
-            <UserButton />
-            <ModeToggle />
-          </div>
-        </Authenticated>
+        <div className="flex space-x-2 items-center px-2">
+          <ModeToggle />
+          <HeaderActions />
+        </div>
       </div>
     </header>
   );
