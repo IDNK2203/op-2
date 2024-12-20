@@ -10,10 +10,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { UploadDocumentForm } from "./upload-document-form";
+import { useState } from "react";
 
 export default function CreateDocumentBtn() {
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button>Upload Document</Button>
       </DialogTrigger>
@@ -25,7 +27,7 @@ export default function CreateDocumentBtn() {
             our AI
           </DialogDescription>
         </DialogHeader>
-        <UploadDocumentForm />
+        <UploadDocumentForm toggleDialog={() => setIsOpen(false)} />
       </DialogContent>
     </Dialog>
   );

@@ -13,9 +13,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { LoadingBtn } from "@/components/loading-btn";
 
 const formSchema = z.object({
   title: z
@@ -26,7 +26,11 @@ const formSchema = z.object({
     .max(256, { message: "title must be at most 256 characters." }),
 });
 
-export function UploadDocumentForm() {
+export function UploadDocumentForm({
+  toggleDialog,
+}: {
+  toggleDialog: () => void;
+}) {
   const clickMeCaller = useMutation(api.documents.createDocument);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -37,10 +41,9 @@ export function UploadDocumentForm() {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    clickMeCaller(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await clickMeCaller(values);
+    toggleDialog();
   }
   return (
     <Form {...form}>
@@ -61,7 +64,7 @@ export function UploadDocumentForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <LoadingBtn isLoading={form.formState.isSubmitting}>Submit</LoadingBtn>
       </form>
     </Form>
   );
