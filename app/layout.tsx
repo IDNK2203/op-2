@@ -4,6 +4,7 @@ import { Provider } from "./provider";
 import { ThemeProvider } from "./theme-provider";
 
 import "./globals.css";
+import LayoutWrapper from "./layout-wrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +38,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <LayoutWrapper>{children}</LayoutWrapper>
           </ThemeProvider>
         </Provider>
       </body>

@@ -35,3 +35,18 @@ export const fetchDocument = query({
       .collect();
   },
 });
+
+export const fetchDocumentById = query({
+  args: {
+    documentId: v.id("document"),
+  },
+  async handler(ctx, args) {
+    const userToken = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
+
+    if (!userToken) return null;
+    const doc = await ctx.db.get(args.documentId);
+    if (!doc) return null;
+
+    return doc.userToken === userToken ? doc : null;
+  },
+});

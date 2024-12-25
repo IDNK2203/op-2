@@ -43,11 +43,8 @@ export function UploadDocumentForm({
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const postUrl = await generateUploadUrl();
-    console.log(postUrl);
-    // Step 2: POST the file to the URL
     const result = await fetch(postUrl, {
       method: "POST",
       headers: { "Content-Type": values.file.type },
