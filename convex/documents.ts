@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+// import { Id } from "@/convex/_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 
 export const generateUploadUrl = mutation(async (ctx) => {
@@ -8,7 +9,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
 export const createDocument = mutation({
   args: {
     title: v.string(),
-    storageId: v.string(),
+    storageId: v.id("_storage"),
   },
   async handler(ctx, args_0) {
     const userToken = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
@@ -47,6 +48,8 @@ export const fetchDocumentById = query({
     const doc = await ctx.db.get(args.documentId);
     if (!doc) return null;
 
-    return doc.userToken === userToken ? doc : null;
+    return doc.userToken === userToken
+      ? { ...doc, documentUrl: await ctx.storage.getUrl(doc.storageId) }
+      : null;
   },
 });

@@ -7,9 +7,9 @@ export default function LayoutWrapper({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="bg-background items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
+    <main className="bg-background h-full flex flex-col min-h-screen font-[family-name:var(--font-geist-sans)]">
       <Header />
-      {children}
+      <div className="flex-grow flex flex-col">{children}</div>
     </main>
   );
 }
