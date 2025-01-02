@@ -4,6 +4,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import React from "react";
+import { ChatPanel } from "./chat-panel";
 
 export default function SingleDocumentPage({
   params,
@@ -29,7 +30,7 @@ export default function SingleDocumentPage({
             <iframe className="w-full h-full" src={document?.documentUrl} />
           </div>
         )}
-        <div className="basis-2/6 bg-gray-900 h-full"></div>
+        <ChatPanel id={documentId} />
       </section>
     </>
   );
