@@ -81,9 +81,6 @@ export const askDocument = action({
     if (!file) throw new ConvexError("file not found");
 
     const text = await file.text();
-    // console.log(text);
-    // const prompt = "Explain how AI works";
-    // const result = await model.generateContent(prompt);
     const chat = model.startChat({
       history: [
         {

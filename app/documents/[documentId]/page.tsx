@@ -1,4 +1,5 @@
 "use client";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -24,13 +25,23 @@ export default function SingleDocumentPage({
       <section className="container mx-auto p-4 flex items-center justify-between mt-10">
         <h1 className="text-3xl">My {document?.title}</h1>
       </section>
-      <section className="container mx-auto p-4 flex flex-grow gap-6 h-[600px]">
-        {document?.documentUrl && (
-          <div className="bg-gray-900 basis-4/6 h-full">
-            <iframe className="w-full h-full" src={document?.documentUrl} />
-          </div>
-        )}
-        <ChatPanel id={documentId} />
+      <section className="container mx-auto p-4 flex flex-grow gap-6 ">
+        <Tabs defaultValue="document" className="w-full max-w-4xl ">
+          <TabsList>
+            <TabsTrigger value="document">Document</TabsTrigger>
+            <TabsTrigger value="chat">Chat</TabsTrigger>
+          </TabsList>
+          <TabsContent value="document">
+            {document?.documentUrl && (
+              <div className="bg-gray-900 h-[600px]">
+                <iframe className="w-full h-full" src={document?.documentUrl} />
+              </div>
+            )}
+          </TabsContent>
+          <TabsContent value="chat">
+            <ChatPanel id={documentId} />
+          </TabsContent>
+        </Tabs>
       </section>
     </>
   );
