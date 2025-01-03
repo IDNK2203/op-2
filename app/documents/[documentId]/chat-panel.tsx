@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useAction } from "convex/react";
+import { useAction, useQuery } from "convex/react";
 
 export function ChatPanel({ id }: { id: Id<"document"> }) {
+  const getChats = useQuery(api.chats.fetchChat, { documentId: id });
   const askDocument = useAction(api.documents.askDocument);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -24,8 +25,12 @@ export function ChatPanel({ id }: { id: Id<"document"> }) {
   return (
     <section className="basis-2/6 bg-gray-900 h-full flex flex-col p-4 ">
       <ul className="grid grid-cols-1 gap-1 overflow-y-auto p-2 mb-4 rounded-md">
-        <ChatItem role="model" text="Hello there" />
-        <ChatItem role="user" text="What is your mission?" />
+        {getChats &&
+          getChats.map((chat, i) => (
+            <ChatItem key={i} role={chat.role} text={chat.text} />
+          ))}
+        {/* <ChatItem role="model" text="Hello there" />
+        <ChatItem role="user" text="What is your mission?" /> */}
       </ul>
       <form onSubmit={handleSubmit} className="flex gap-2 py-2 ">
         <Input
@@ -42,7 +47,7 @@ export function ChatPanel({ id }: { id: Id<"document"> }) {
 function ChatItem({ role, text }: { role: "user" | "model"; text: string }) {
   return (
     <li
-      className={`p-2 ${role === "user" ? "bg-slate-500 justify-self-end " : "bg-slate-700 justify-self-start"} rounded-md w-max max-w-[80%] justify-self-start `}
+      className={`p-2 mb-2 whitespace-pre-wrap ${role === "user" ? "bg-slate-500 justify-self-end " : "bg-slate-700 justify-self-start"} rounded-md w-max max-w-[80%] justify-self-start `}
     >
       {text}
     </li>
