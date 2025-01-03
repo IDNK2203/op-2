@@ -1,26 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useAction, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
+import { ChatForm } from "./chat-form";
 
 export function ChatPanel({ id }: { id: Id<"document"> }) {
   const getChats = useQuery(api.chats.fetchChat, { documentId: id });
-  const askDocument = useAction(api.documents.askDocument);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget as HTMLFormElement;
-    const formData = new FormData(form);
-    const question = formData.get("question") as string;
-    const aiResponse = await askDocument({
-      documentId: id,
-      question,
-    });
-    console.log(aiResponse);
-
-    console.log("submitting");
-  };
 
   return (
     <section className="basis-2/6 bg-gray-900 h-full flex flex-col p-4 ">
@@ -32,14 +16,7 @@ export function ChatPanel({ id }: { id: Id<"document"> }) {
         {/* <ChatItem role="model" text="Hello there" />
         <ChatItem role="user" text="What is your mission?" /> */}
       </ul>
-      <form onSubmit={handleSubmit} className="flex gap-2 py-2 ">
-        <Input
-          type="text"
-          name="question"
-          className="border border-slate-500"
-        />
-        <Button type="submit">Send</Button>
-      </form>
+      <ChatForm id={id} />
     </section>
   );
 }
