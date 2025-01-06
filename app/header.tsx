@@ -9,10 +9,14 @@ import Link from "next/link";
 function Header() {
   return (
     <header className="bg-slate-900 ">
-      <div className="container p-4 mx-auto max-w- flex items-center justify-between">
+      <div className="container max-w-7xl p-4 mx-auto max-w- flex items-center justify-between">
         <Link href={"/"}>
-          <div className="w-12 flex justify-center">
+          <div className="w-12 flex justify-center relative">
             <Image alt="child savings avatar" src={Logo} className="" />{" "}
+            <Link
+              href={"/"}
+              className="absolute top-0 right-0 left-0 bg-tranparent size-full"
+            ></Link>
           </div>
         </Link>
         {/* <Unauthenticated>

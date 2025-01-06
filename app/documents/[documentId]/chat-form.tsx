@@ -43,6 +43,7 @@ export function ChatForm({ id }: { id: Id<"document"> }) {
       documentId: id,
       question: values.question,
     });
+    form.reset();
     // await clickMeCaller({ title: values.title, storageId });
     // toggleDialog();
   }

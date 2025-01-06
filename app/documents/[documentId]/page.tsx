@@ -22,10 +22,10 @@ export default function SingleDocumentPage({
 
   return (
     <>
-      <section className="container mx-auto p-4 flex items-center justify-between mt-10">
+      <section className="container max-w-7xl mx-auto p-4 flex items-center justify-between mt-10">
         <h1 className="text-3xl">My {document?.title}</h1>
       </section>
-      <section className="container mx-auto p-4 flex flex-grow gap-6 ">
+      <section className="container  max-w-7xl mx-auto p-4 flex flex-grow gap-6 ">
         <Tabs defaultValue="document" className="w-full max-w-4xl ">
           <TabsList>
             <TabsTrigger value="document">Document</TabsTrigger>
