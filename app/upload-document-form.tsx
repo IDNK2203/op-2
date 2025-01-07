@@ -84,7 +84,7 @@ export function UploadDocumentForm({
                 <Input
                   {...fieldProps}
                   type="file"
-                  accept=".txt,.pdf,.doc,.docx,.md"
+                  accept=".txt,.pdf,.doc,.docx,.md,.mdx"
                   onChange={(event) => {
                     const file = event.target.files?.[0];
                     if (file) onChange(file);

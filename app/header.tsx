@@ -1,6 +1,4 @@
-// import { SignInButton } from "@clerk/clerk-react";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-// import { Unauthenticated } from "convex/react";
 import Image from "next/image";
 import Logo from "../public/images/op-2-logo.png";
 import HeaderActions from "./header-actions";
@@ -13,15 +11,8 @@ function Header() {
         <Link href={"/"}>
           <div className="w-12 flex justify-center relative">
             <Image alt="child savings avatar" src={Logo} className="" />{" "}
-            <Link
-              href={"/"}
-              className="absolute top-0 right-0 left-0 bg-tranparent size-full"
-            ></Link>
           </div>
         </Link>
-        {/* <Unauthenticated>
-          <SignInButton />
-        </Unauthenticated> */}
         <div className="flex space-x-2 items-center px-2">
           <ModeToggle />
           <HeaderActions />

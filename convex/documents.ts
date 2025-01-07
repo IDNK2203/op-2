@@ -68,7 +68,7 @@ export const fetchDocument = query({
   async handler(ctx) {
     const userToken = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
 
-    if (!userToken) return [];
+    if (!userToken) return null;
 
     return await ctx.db
       .query("document")
