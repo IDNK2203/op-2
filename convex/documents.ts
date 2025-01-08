@@ -2,6 +2,8 @@ import { ConvexError, v } from "convex/values";
 // import { Id } from "@/convex/_generated/dataModel";
 import {
   action,
+  internalAction,
+  internalMutation,
   internalQuery,
   mutation,
   MutationCtx,
@@ -56,10 +58,54 @@ export const createDocument = mutation({
 
     if (!userToken) return [];
 
-    await ctx.db.insert("document", {
+    const doc = await ctx.db.insert("document", {
       title: args_0.title,
       userToken: userToken,
       storageId: args_0.storageId,
+    });
+
+    await ctx.scheduler.runAfter(0, internal.documents.generateDescription, {
+      storageId: args_0.storageId,
+      docId: doc,
+    });
+  },
+});
+export const updateDocDescription = internalMutation({
+  args: { id: v.id("document"), description: v.string() },
+
+  async handler(ctx, args_0) {
+    const userToken = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
+
+    if (!userToken) return [];
+
+    await ctx.db.patch(args_0.id, { description: args_0.description });
+  },
+});
+
+export const generateDescription = internalAction({
+  args: {
+    storageId: v.id("_storage"),
+    docId: v.id("document"),
+  },
+  handler: async (ctx, args) => {
+    const file = await ctx.storage.get(args.storageId);
+
+    if (!file) throw new ConvexError("file not found");
+
+    const text = await file.text();
+
+    const result =
+      await model.generateContent(`using the content from the file below generate a short one sentence description for it
+      
+      File CONTENT:
+
+      ${text},
+      `);
+
+    const description = result.response.text();
+    await ctx.runMutation(internal.documents.updateDocDescription, {
+      id: args.docId,
+      description: description,
     });
   },
 });
