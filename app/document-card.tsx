@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Doc } from "@/convex/_generated/dataModel";
-import { Eye } from "lucide-react";
+import { Eye, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 export default function DocumentCard({
@@ -23,7 +23,13 @@ export default function DocumentCard({
         <CardDescription></CardDescription>
       </CardHeader>
       <CardContent>
-        <p>{document?.description}</p>
+        <p>
+          {document?.description ? (
+            document?.description
+          ) : (
+            <Loader2 className="animate-spin" />
+          )}
+        </p>
       </CardContent>
       <CardFooter>
         <Button asChild variant={"secondary"}>

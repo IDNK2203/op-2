@@ -34,7 +34,7 @@ export function UploadDocumentForm({
 }) {
   const generateUploadUrl = useMutation(api.documents.generateUploadUrl);
 
-  const clickMeCaller = useMutation(api.documents.createDocument);
+  const uploadDocHandler = useMutation(api.documents.createDocument);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,7 +52,7 @@ export function UploadDocumentForm({
     });
     const { storageId } = await result.json();
 
-    await clickMeCaller({ title: values.title, storageId });
+    await uploadDocHandler({ title: values.title, storageId });
     toggleDialog();
   }
   return (

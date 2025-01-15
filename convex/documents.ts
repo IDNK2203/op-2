@@ -62,23 +62,13 @@ export const createDocument = mutation({
       title: args_0.title,
       userToken: userToken,
       storageId: args_0.storageId,
+      description: "",
     });
 
     await ctx.scheduler.runAfter(0, internal.documents.generateDescription, {
       storageId: args_0.storageId,
       docId: doc,
     });
-  },
-});
-export const updateDocDescription = internalMutation({
-  args: { id: v.id("document"), description: v.string() },
-
-  async handler(ctx, args_0) {
-    const userToken = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
-
-    if (!userToken) return [];
-
-    await ctx.db.patch(args_0.id, { description: args_0.description });
   },
 });
 
@@ -88,11 +78,15 @@ export const generateDescription = internalAction({
     docId: v.id("document"),
   },
   handler: async (ctx, args) => {
+    // console.log("runing scheduled action");
+
     const file = await ctx.storage.get(args.storageId);
 
     if (!file) throw new ConvexError("file not found");
 
     const text = await file.text();
+
+    // console.log("gotten text file \n" + text);
 
     const result =
       await model.generateContent(`using the content from the file below generate a short one sentence description for it
@@ -103,10 +97,20 @@ export const generateDescription = internalAction({
       `);
 
     const description = result.response.text();
+    // console.log("AI gen doc description " + description);
+
     await ctx.runMutation(internal.documents.updateDocDescription, {
       id: args.docId,
       description: description,
     });
+  },
+});
+
+export const updateDocDescription = internalMutation({
+  args: { id: v.id("document"), description: v.string() },
+
+  async handler(ctx, args_0) {
+    await ctx.db.patch(args_0.id, { description: args_0.description });
   },
 });
 
