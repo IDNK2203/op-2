@@ -23,16 +23,20 @@ const hasAccessToDocument = async (
   ctx: QueryCtx | MutationCtx,
   documentId: Id<"document">
 ) => {
-  const userToken = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
+  try {
+    const userToken = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
 
-  if (!userToken) return null;
-  const doc = await ctx.db.get(documentId);
-  if (!doc) return null;
-  if (doc.userToken !== userToken) return null;
-  return {
-    doc,
-    userToken,
-  };
+    if (!userToken) return null;
+    const doc = await ctx.db.get(documentId);
+    if (!doc) return null;
+    if (doc.userToken !== userToken) return null;
+    return {
+      doc,
+      userToken,
+    };
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const hasAccessToDocumentQuery = internalQuery({

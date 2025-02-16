@@ -6,6 +6,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import React from "react";
 import { ChatPanel } from "./chat-panel";
+import { Loader2 } from "lucide-react";
 
 export default function SingleDocumentPage({
   params,
@@ -14,11 +15,27 @@ export default function SingleDocumentPage({
 }) {
   const { documentId } = React.use(params);
 
-  console.log(documentId);
+  // console.log(documentId);
   const document = useQuery(api.documents.fetchDocumentById, { documentId });
   //   const fetchedDocs = useQuery(api.documents.fetchDocument);
 
-  if (!document) return <div>You don have access to this document.</div>;
+  // {typeof fetchedDocs === "undefined" &&
+  // new Array(8).fill("").map((_, i) => <CardSkeleton key={i} />)}
+  if (typeof document === "undefined")
+    return (
+      <section className="flex justify-center items-center h-screen">
+        <Loader2 className="animate-spin size-10" />
+      </section>
+    );
+
+  if (!document)
+    return (
+      <section className="flex justify-center items-center h-screen">
+        <div>You don have access to this document.</div>
+      </section>
+    );
+
+  // if (!document) return <div>You don have access to this document.</div>;
 
   return (
     <>
