@@ -7,6 +7,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import React from "react";
 import { ChatPanel } from "./chat-panel";
 import { Loader2 } from "lucide-react";
+import DeleteDocumentBtn from "@/app/delete-document-btn";
 
 export default function SingleDocumentPage({
   params,
@@ -41,6 +42,7 @@ export default function SingleDocumentPage({
     <>
       <section className="container max-w-7xl mx-auto p-4 flex items-center justify-between mt-10">
         <h1 className="text-3xl">My {document?.title}</h1>
+        <DeleteDocumentBtn id={documentId} />
       </section>
       <section className="container  max-w-7xl mx-auto p-4 flex flex-grow gap-6 ">
         <Tabs defaultValue="document" className="w-full max-w-4xl ">

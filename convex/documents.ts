@@ -204,8 +204,18 @@ export const askDocument = action({
   },
 });
 
-// const result = await chat.sendMessage(`Here is a text file
-//   ${file}
+export const DeleteDocument = mutation({
+  args: {
+    documentId: v.id("document"),
+  },
+  async handler(ctx, args) {
+    // call a query
+    const accessResult = await hasAccessToDocument(ctx, args.documentId);
+    if (!accessResult) return null;
+    const { doc } = accessResult;
 
-//   Answer the following questions about the text file
-//   question: ${args.question}`);
+    if (!doc) return null;
+    await ctx.storage.delete(doc.storageId);
+    await ctx.db.delete(args.documentId);
+  },
+});
