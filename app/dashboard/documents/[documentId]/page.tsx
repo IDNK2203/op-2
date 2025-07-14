@@ -7,7 +7,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import React from "react";
 import { ChatPanel } from "./chat-panel";
 import { Loader2 } from "lucide-react";
-import DeleteDocumentBtn from "@/app/delete-document-btn";
+import DeleteDocumentBtn from "@/app/dashboard/documents/delete-document-btn";
 
 export default function SingleDocumentPage({
   params,

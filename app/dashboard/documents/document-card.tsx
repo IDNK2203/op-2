@@ -33,7 +33,7 @@ export default function DocumentCard({
       </CardContent>
       <CardFooter>
         <Button asChild variant={"secondary"}>
-          <Link href={`/documents/${document._id}`}>
+          <Link href={`/dashboard/documents/${document._id}`}>
             {" "}
             <Eye /> Click
           </Link>

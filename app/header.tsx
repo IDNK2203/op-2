@@ -8,11 +8,14 @@ function Header() {
   return (
     <header className="bg-slate-900 ">
       <div className="container max-w-7xl p-4 mx-auto max-w- flex items-center justify-between">
-        <Link href={"/"}>
-          <div className="w-12 flex justify-center relative">
-            <Image alt="child savings avatar" src={Logo} className="" />{" "}
-          </div>
-        </Link>
+        <div className="flex items-center space-x-2">
+          <Link href={"/"}>
+            <div className="w-12 flex justify-center relative">
+              <Image alt="child savings avatar" src={Logo} className="" />{" "}
+            </div>
+          </Link>
+          <Link href={"/dashboard"}>Dashboard</Link>
+        </div>
         <div className="flex space-x-2 items-center px-2">
           <ModeToggle />
           <HeaderActions />
