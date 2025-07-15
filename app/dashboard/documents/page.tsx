@@ -20,11 +20,11 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <section className="container max-w-7xl mx-auto p-4 flex items-center justify-between ">
+      <section className="w-full flex items-center justify-between pb-4">
         <h1 className="text-3xl">My Documents </h1>
         <CreateDocumentBtn />
       </section>
-      <section className="container max-w-7xl mx-auto p-4 grid grid-cols-4 gap-3">
+      <section className="grid grid-cols-4 gap-3">
         {typeof fetchedDocs === "undefined" &&
           new Array(8).fill("").map((_, i) => <CardSkeleton key={i} />)}
         {fetchedDocs &&
