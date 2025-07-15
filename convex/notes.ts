@@ -70,19 +70,21 @@ export const fetchNote = query({
   },
 });
 
-// export const fetchDocumentById = query({
-//   args: {
-//     noteId: v.id("note"),
-//   },
-//   async handler(ctx, args) {
-//     const accessResult = await hasAccessToNoteQuery(ctx, args.noteId);
-//     if (!accessResult) return null;
-//     const { note } = accessResult;
+export const fetchNoteById = query({
+  args: {
+    noteId: v.id("note"),
+  },
+  async handler(ctx, args) {
+    const accessResult = await hasAccessToNoteQuery(ctx, {
+      noteId: args.noteId,
+    });
+    if (!accessResult) return null;
+    const { note } = accessResult;
 
-//     if (!note) return null;
-//     return { ...note,  };
-//   },
-// });
+    if (!note) return null;
+    return { ...note };
+  },
+});
 
 // export const DeleteNote = mutation({
 //   args: {
