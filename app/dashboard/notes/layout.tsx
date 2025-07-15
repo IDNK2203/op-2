@@ -2,11 +2,16 @@
 
 import { ReactNode } from "react";
 import CreateNoteButton from "./create-note-btn";
-// s
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { Id } from "@/convex/_generated/dataModel";
+import { useParams } from "next/navigation";
 
 export default function NotesLayout({ children }: { children: ReactNode }) {
-  //   const notes = useQuery(api.notes.getNotes);
-  //   const { noteId } = useParams<{ noteId: Id<"notes"> }>();
+  const notes = useQuery(api.notes.fetchNote);
+  const { noteId } = useParams<{ noteId: Id<"note"> }>(); // Assuming you have a way to get the current note ID, e.g., from URL params
 
   return (
     <main className="w-full space-y-8">
@@ -16,7 +21,7 @@ export default function NotesLayout({ children }: { children: ReactNode }) {
       </div>
 
       <div className="flex gap-12">
-        {/* <ul className="space-y-2 w-[300px]">
+        <ul className="space-y-2 w-[300px]">
           {notes?.map((note) => (
             <li
               key={note._id}
@@ -29,7 +34,7 @@ export default function NotesLayout({ children }: { children: ReactNode }) {
               </Link>
             </li>
           ))}
-        </ul> */}
+        </ul>
 
         <div className="bg-slate-800 rounded p-4 w-full">{children}</div>
       </div>
