@@ -19,8 +19,8 @@ export default function Home() {
   // states loading undefined, empty [], not-empty, error null
 
   return (
-    <>
-      <section className="container max-w-7xl mx-auto p-4 flex items-center justify-between mt-10">
+    <div className="flex flex-col items-center w-full">
+      <section className="container max-w-7xl mx-auto p-4 flex items-center justify-between ">
         <h1 className="text-3xl">My Documents </h1>
         <CreateDocumentBtn />
       </section>
@@ -32,7 +32,7 @@ export default function Home() {
           fetchedDocs?.map((el, i) => <DocumentCard key={i} document={el} />)}
       </section>
       {fetchedDocs && fetchedDocs?.length < 1 && <EmptyState />}
-    </>
+    </div>
   );
 }
 
