@@ -12,9 +12,11 @@ import {
 import { CreateNoteForm } from "./create-note-form";
 import { useState } from "react";
 import { Upload } from "lucide-react";
+import { toast } from "sonner";
 
 export default function CreateDocumentBtn() {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -30,7 +32,14 @@ export default function CreateDocumentBtn() {
             Upload your team note to witness lightening speed search with our AI
           </DialogDescription>
         </DialogHeader>
-        <CreateNoteForm toggleDialog={() => setIsOpen(false)} />
+        <CreateNoteForm
+          toggleDialog={() => {
+            setIsOpen(false);
+            toast("Note created", {
+              description: "Your note has been created successfully.",
+            });
+          }}
+        />
       </DialogContent>
     </Dialog>
   );
