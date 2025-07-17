@@ -86,17 +86,19 @@ export const fetchNoteById = query({
   },
 });
 
-// export const DeleteNote = mutation({
-//   args: {
-//     noteId: v.id("note"),
-//   },
-//   async handler(ctx, args) {
-//     // call a query
-//     const accessResult = await hasAccessToNoteQuery(ctx, args.noteId);
-//     if (!accessResult) return null;
-//     const { note } = accessResult;
+export const DeleteNote = mutation({
+  args: {
+    noteId: v.id("note"),
+  },
+  async handler(ctx, args) {
+    // call a query
+    const accessResult = await hasAccessToNoteQuery(ctx, {
+      noteId: args.noteId,
+    });
+    if (!accessResult) return null;
+    const { note } = accessResult;
 
-//     if (!note) return null;
-//     await ctx.db.delete(args.noteId);
-//   },
-// });
+    if (!note) return null;
+    await ctx.db.delete(args.noteId);
+  },
+});
