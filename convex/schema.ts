@@ -11,8 +11,15 @@ export default defineSchema({
   }).index("by_userToken", ["userToken"]),
   note: defineTable({
     text: v.string(),
+    embedding: v.optional(v.array(v.float64())),
     tokenIdentifier: v.string(),
-  }).index("by_tokenIdentifier", ["tokenIdentifier"]),
+  })
+    .index("by_tokenIdentifier", ["tokenIdentifier"])
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536,
+      filterFields: ["tokenIdentifier"],
+    }),
   chat: defineTable({
     documentId: v.id("document"),
     userToken: v.string(),
