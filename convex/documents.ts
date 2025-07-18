@@ -13,11 +13,10 @@ import {
 // import OpenAI from "openai";
 import { internal } from "./_generated/api";
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import { Id } from "./_generated/dataModel";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
 const hasAccessToDocument = async (
   ctx: QueryCtx | MutationCtx,
@@ -90,18 +89,22 @@ export const generateDescription = internalAction({
 
     const text = await file.text();
 
-    // console.log("gotten text file \n" + text);
+    const contentParams = `using the content from the file below generate a short one sentence description for it
 
-    const result =
-      await model.generateContent(`using the content from the file below generate a short one sentence description for it
-      
       File CONTENT:
 
       ${text},
-      `);
+      `;
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: contentParams,
+    });
 
-    const description = result.response.text();
-    // console.log("AI gen doc description " + description);
+    const description = response.text;
+
+    if (!description) {
+      throw new ConvexError("Failed to generate description");
+    }
 
     await ctx.runMutation(internal.documents.updateDocDescription, {
       id: args.docId,
@@ -165,7 +168,23 @@ export const askDocument = action({
     if (!file) throw new ConvexError("file not found");
 
     const text = await file.text();
-    const chat = model.startChat({
+
+    //  const chat = ai.chats.create({
+    //     model: "gemini-2.5-flash",
+    //     history: [
+    //       {
+    //         role: "user",
+    //         parts: [{ text: "Hello" }],
+    //       },
+    //       {
+    //         role: "model",
+    //         parts: [{ text: "Great to meet you. What would you like to know?" }],
+    //       },
+    //     ],
+    //   });
+
+    const chat = ai.chats.create({
+      model: "gemini-2.5-flash",
       history: [
         {
           role: "user",
@@ -183,8 +202,14 @@ export const askDocument = action({
       ],
     });
 
-    const result = await chat.sendMessage(`question: ${args.question}`);
-    const textRes = result.response.text();
+    const result = await chat.sendMessage({
+      message: `question: ${args.question}`,
+    });
+    const textRes = result.text;
+
+    if (!textRes) {
+      throw new ConvexError("Failed to generate response");
+    }
 
     // store  user prompt as a chat record
     await ctx.runMutation(internal.chats.createChat, {
