@@ -39,7 +39,7 @@ export default function SingleDocumentPage({
   // if (!document) return <div>You don have access to this document.</div>;
 
   return (
-    <>
+    <div className="flex flex-col items-center w-full">
       <section className="container max-w-7xl mx-auto p-4 flex items-center justify-between mt-10">
         <h1 className="text-3xl">My {document?.title}</h1>
         <DeleteDocumentBtn id={documentId} />
@@ -62,6 +62,6 @@ export default function SingleDocumentPage({
           </TabsContent>
         </Tabs>
       </section>
-    </>
+    </div>
   );
 }
