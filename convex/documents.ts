@@ -15,6 +15,7 @@ import { internal } from "./_generated/api";
 
 import { GoogleGenAI } from "@google/genai";
 import { Id } from "./_generated/dataModel";
+import { createEmbedding } from "./notes";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
@@ -72,6 +73,50 @@ export const createDocument = mutation({
       storageId: args_0.storageId,
       docId: doc,
     });
+
+    await ctx.scheduler.runAfter(
+      0,
+      internal.documents.createEmbeddingIntAction,
+      {
+        docId: doc,
+        storageId: args_0.storageId,
+      }
+    );
+  },
+});
+
+export const createEmbeddingIntAction = internalAction({
+  args: {
+    storageId: v.id("_storage"),
+    docId: v.id("document"),
+  },
+  handler: async (ctx, args) => {
+    // console.log("runing scheduled action");
+
+    const file = await ctx.storage.get(args.storageId);
+
+    if (!file) throw new ConvexError("file not found");
+
+    const text = await file.text();
+
+    const embedding = await createEmbedding(text, "SEMANTIC_SIMILARITY");
+    if (!embedding) {
+      throw new ConvexError("Failed to create embedding");
+    }
+    await ctx.runMutation(internal.documents.updateDocwithEmbedding, {
+      embedding,
+      docId: args.docId,
+    });
+  },
+});
+
+export const updateDocwithEmbedding = internalMutation({
+  args: {
+    docId: v.id("document"),
+    embedding: v.array(v.float64()),
+  },
+  async handler(ctx, args) {
+    await ctx.db.patch(args.docId, { embedding: args.embedding });
   },
 });
 

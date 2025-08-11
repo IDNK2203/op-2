@@ -43,20 +43,20 @@ export const hasAccessToNoteQuery = internalQuery({
   },
 });
 
-const createNoteEmbedding = async (text: string) => {
+export const createEmbedding = async (text: string, taskType: string) => {
   try {
     const response = await ai.models.embedContent({
       model: "gemini-embedding-001",
       contents: text,
       config: {
         outputDimensionality: 1536,
-        taskType: "RETRIEVAL_QUERY",
+        taskType: taskType,
       },
     });
     // Assuming response.embeddings is an array of ContentEmbedding objects
     // and each object has a 'values' property which is number[]
     // If the API returns a single embedding, adjust accordingly
-    console.log(response);
+    // console.log(response);
     if (Array.isArray(response.embeddings) && response.embeddings.length > 0) {
       return response.embeddings[0].values;
     }
@@ -94,7 +94,7 @@ export const createEmbeddingIntAction = internalAction({
     text: v.string(),
   },
   async handler(ctx, args) {
-    const embedding = await createNoteEmbedding(args.text);
+    const embedding = await createEmbedding(args.text, "SEMANTIC_SIMILARITY");
     if (!embedding) {
       throw new ConvexError("Failed to create embedding");
     }

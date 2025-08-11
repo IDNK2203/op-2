@@ -8,7 +8,14 @@ export default defineSchema({
     description: v.optional(v.string()),
     userToken: v.string(),
     storageId: v.id("_storage"),
-  }).index("by_userToken", ["userToken"]),
+    embedding: v.optional(v.array(v.float64())),
+  })
+    .index("by_userToken", ["userToken"])
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536,
+      filterFields: ["userToken"],
+    }),
   note: defineTable({
     text: v.string(),
     embedding: v.optional(v.array(v.float64())),
