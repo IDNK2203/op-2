@@ -8,54 +8,153 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Id } from "@/convex/_generated/dataModel";
 import { useParams } from "next/navigation";
-import Image from "next/image";
-import NotFound from "../../../public/images/not-found-home.svg";
+import { StickyNote, Plus } from "lucide-react";
 
 export default function NotesLayout({ children }: { children: ReactNode }) {
   const notes = useQuery(api.notes.fetchNote);
-  const { noteId } = useParams<{ noteId: Id<"note"> }>(); // Assuming you have a way to get the current note ID, e.g., from URL params
+  const { noteId } = useParams<{ noteId: Id<"note"> }>();
 
   const hasNotes = notes && notes.length > 0;
 
   return (
-    <main className="w-full space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-4xl font-bold">Notes</h1>
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-[#35174D] flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-[#62AE6E] to-[#9CB18B] rounded-lg flex items-center justify-center">
+              <StickyNote className="w-4 h-4 text-white" />
+            </div>
+            Notes
+          </h1>
+          <p className="text-[#35174D]/60 mt-1">
+            Quick notes and compliance reminders
+          </p>
+        </div>
         <CreateNoteButton />
       </div>
-      {hasNotes && (
-        <div className="flex gap-12">
-          <ul className="space-y-2 w-[300px]">
-            {notes?.map((note) => (
-              <li
-                key={note._id}
-                className={cn("text-base hover:text-cyan-100", {
-                  "text-cyan-300": note._id === noteId,
-                })}
-              >
-                <Link href={`/dashboard/notes/${note._id}`}>
-                  {note.text.substring(0, 24) + "..."}
-                </Link>
-              </li>
-            ))}
-          </ul>
 
-          <div className="w-full">{children}</div>
+      {/* Stats */}
+      {hasNotes && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white rounded-xl border border-[#35174D]/10 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-[#35174D]/60">Total Notes</p>
+                <p className="text-2xl font-bold text-[#35174D]">
+                  {notes.length}
+                </p>
+              </div>
+              <div className="w-10 h-10 bg-[#62AE6E]/10 rounded-lg flex items-center justify-center">
+                <StickyNote className="w-5 h-5 text-[#62AE6E]" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border border-[#35174D]/10 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-[#35174D]/60">This Week</p>
+                <p className="text-2xl font-bold text-[#35174D]">
+                  {
+                    notes.filter((note) => {
+                      const noteDate = new Date(note._creationTime);
+                      const weekAgo = new Date();
+                      weekAgo.setDate(weekAgo.getDate() - 7);
+                      return noteDate > weekAgo;
+                    }).length
+                  }
+                </p>
+              </div>
+              <div className="w-10 h-10 bg-[#E7B627]/10 rounded-lg flex items-center justify-center">
+                <Plus className="w-5 h-5 text-[#E7B627]" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border border-[#35174D]/10 p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-[#35174D]/60">Average Length</p>
+                <p className="text-2xl font-bold text-[#35174D]">
+                  {Math.round(
+                    notes.reduce((acc, note) => acc + note.text.length, 0) /
+                      notes.length
+                  )}{" "}
+                  chars
+                </p>
+              </div>
+              <div className="w-10 h-10 bg-[#A34280]/10 rounded-lg flex items-center justify-center">
+                <StickyNote className="w-5 h-5 text-[#A34280]" />
+              </div>
+            </div>
+          </div>
         </div>
       )}
-      {!hasNotes && <EmptyState />}
-    </main>
+
+      {hasNotes ? (
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Notes List */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-xl border border-[#35174D]/10 p-4 sticky top-8">
+              <h3 className="font-semibold text-[#35174D] mb-4 px-2">
+                Recent Notes
+              </h3>
+              <div className="space-y-2 max-h-[500px] overflow-y-auto">
+                {notes?.map((note) => (
+                  <Link
+                    key={note._id}
+                    href={`/dashboard/notes/${note._id}`}
+                    className={cn(
+                      "block p-3 rounded-lg text-sm transition-all hover:bg-[#35174D]/5",
+                      note._id === noteId
+                        ? "bg-gradient-to-r from-[#A34280]/10 to-[#35174D]/10 text-[#35174D] border-l-2 border-[#A34280]"
+                        : "text-[#35174D]/70 hover:text-[#35174D]"
+                    )}
+                  >
+                    <div className="line-clamp-2 leading-relaxed">
+                      {note.text.substring(0, 100)}
+                      {note.text.length > 100 && "..."}
+                    </div>
+                    <div className="text-xs text-[#35174D]/40 mt-2">
+                      {new Date(note._creationTime).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "short",
+                          day: "numeric",
+                        }
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Note Content */}
+          <div className="lg:col-span-3">{children}</div>
+        </div>
+      ) : (
+        <EmptyState />
+      )}
+    </div>
   );
 }
 
 const EmptyState = () => (
-  <div className="flex flex-col justify-center items-center w-full">
-    <div className="max-w-xl flex justify-center relative max-">
-      <Image alt="child savings avatar" src={NotFound} className="" />{" "}
+  <div className="flex flex-col items-center justify-center py-16">
+    <div className="max-w-md text-center">
+      <div className="w-16 h-16 bg-[#35174D]/5 rounded-full flex items-center justify-center mb-6">
+        <StickyNote className="w-8 h-8 text-[#35174D]/40" />
+      </div>
+      <h3 className="text-xl font-semibold text-[#35174D] mb-2">
+        No notes yet
+      </h3>
+      <p className="text-[#35174D]/60 mb-6">
+        Create your first note to start organizing your compliance thoughts and
+        reminders.
+      </p>
+      <CreateNoteButton />
     </div>
-    <div className=" my-4">
-      <h2>You don&apos;t have any notes</h2>
-    </div>
-    {/* <CreateDocumentBtn /> */}
   </div>
 );
