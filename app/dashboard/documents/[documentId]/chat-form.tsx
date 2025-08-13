@@ -6,10 +6,8 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  //   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
@@ -18,14 +16,15 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useAction } from "convex/react";
 import { LoadingBtn } from "@/components/loading-btn";
+import { Send } from "lucide-react";
 
 const formSchema = z.object({
   question: z
     .string()
     .min(2, {
-      message: "title must be at least 2 characters.",
+      message: "Question must be at least 2 characters.",
     })
-    .max(256, { message: "title must be at most 256 characters." }),
+    .max(256, { message: "Question must be at most 256 characters." }),
 });
 
 export function ChatForm({ id }: { id: Id<"document"> }) {
@@ -44,45 +43,51 @@ export function ChatForm({ id }: { id: Id<"document"> }) {
       question: values.question,
     });
     form.reset();
-    // await clickMeCaller({ title: values.title, storageId });
-    // toggleDialog();
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <div className="flex gap-3 items-end">
         <FormField
           control={form.control}
           name="question"
           render={({ field }) => (
-            <FormItem className="flex items-center gap-2">
-              {/* <FormLabel>Title</FormLabel> */}
+            <FormItem className="flex-1">
               <FormControl>
-                <Input
-                  placeholder="what do you want to know?"
-                  {...field}
-                  className="mt-2"
-                />
+                <div className="relative">
+                  <Input
+                    placeholder="Ask a question about this document..."
+                    {...field}
+                    className="pr-12 bg-[#35174D]/5 border-[#35174D]/20 focus:border-[#A34280] focus:ring-[#A34280]/20 rounded-xl"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        form.handleSubmit(onSubmit)();
+                      }
+                    }}
+                  />
+                </div>
               </FormControl>
-              <LoadingBtn isLoading={form.formState.isSubmitting}>
-                Submit
-              </LoadingBtn>
-              <FormDescription>
-                {/* This is your public display name. */}
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-      </form>
+
+        <LoadingBtn
+          isLoading={form.formState.isSubmitting}
+          onClick={form.handleSubmit(onSubmit)}
+          className="bg-gradient-to-r from-[#A34280] to-[#35174D] hover:from-[#35174D] hover:to-[#A34280] text-white rounded-xl h-10 px-4"
+          disabled={!form.watch("question")?.trim()}
+        >
+          {form.formState.isSubmitting ? (
+            "Sending..."
+          ) : (
+            <>
+              <Send className="w-4 h-4" />
+            </>
+          )}
+        </LoadingBtn>
+      </div>
     </Form>
-    //   <form onSubmit={handleSubmit} className="flex gap-2 py-2 ">
-    //     <Input
-    //       type="text"
-    //       name="question"
-    //       className="border border-slate-500"
-    //     />
-    //     <Button type="submit">Send</Button>
-    //   </form>
   );
 }
