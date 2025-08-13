@@ -8,7 +8,7 @@ export function ChatPanel({ id }: { id: Id<"document"> }) {
   const getChats = useQuery(api.chats.fetchChat, { documentId: id });
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col flex-grow h-full">
       {/* Chat Header */}
       <div className="px-6 py-4 border-b border-[#35174D]/10">
         <div className="flex items-center gap-3">
@@ -25,7 +25,7 @@ export function ChatPanel({ id }: { id: Id<"document"> }) {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+      <div className="overflow-y-auto p-6 space-y-4 flex-grow">
         {getChats && getChats.length > 0 ? (
           getChats.map((chat, i) => (
             <ChatItem key={i} role={chat.role} text={chat.text} />
@@ -47,7 +47,7 @@ export function ChatPanel({ id }: { id: Id<"document"> }) {
       </div>
 
       {/* Chat Input */}
-      <div className="border-t border-[#35174D]/10 p-6">
+      <div className="border-t border-[#35174D]/10 p-4 h-[150px]">
         <ChatForm id={id} />
       </div>
     </div>
