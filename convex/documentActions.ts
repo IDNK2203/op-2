@@ -13,7 +13,7 @@ export async function processWithGoogleDocumentAI(file: Blob) {
     formData.append("file", file);
 
     // Call your custom API route that handles Google Document AI
-    const response = await fetch("/api/process-pdf", {
+    const response = await fetch(`${process.env.HOST}/api/process-pdf`, {
       method: "POST",
       body: formData,
     });
