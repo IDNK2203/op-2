@@ -1,53 +1,52 @@
 // app/api/process-pdf/route.ts
 import { NextRequest, NextResponse } from "next/server";
+// // Option A: Using PDF.co (has free tier)
+// async function processWithPDFCo(fileBuffer: ArrayBuffer) {
+//   const formData = new FormData();
+//   const blob = new Blob([fileBuffer], { type: "application/pdf" });
+//   formData.append("file", blob);
 
-// Option A: Using PDF.co (has free tier)
-async function processWithPDFCo(fileBuffer: ArrayBuffer) {
-  const formData = new FormData();
-  const blob = new Blob([fileBuffer], { type: "application/pdf" });
-  formData.append("file", blob);
+//   const response = await fetch("https://api.pdf.co/v1/pdf/convert/to/text", {
+//     method: "POST",
+//     headers: {
+//       "x-api-key": process.env.PDFCO_API_KEY!, // Free tier available
+//     },
+//     body: formData,
+//   });
 
-  const response = await fetch("https://api.pdf.co/v1/pdf/convert/to/text", {
-    method: "POST",
-    headers: {
-      "x-api-key": process.env.PDFCO_API_KEY!, // Free tier available
-    },
-    body: formData,
-  });
+//   if (!response.ok) {
+//     throw new Error("PDF.co processing failed");
+//   }
 
-  if (!response.ok) {
-    throw new Error("PDF.co processing failed");
-  }
+//   const result = await response.json();
+//   return result.text;
+// }
 
-  const result = await response.json();
-  return result.text;
-}
+// // Option B: Using PDFShift (alternative free service)
+// async function processWithPDFShift(fileBuffer: ArrayBuffer) {
+//   const base64 = Buffer.from(fileBuffer).toString("base64");
 
-// Option B: Using PDFShift (alternative free service)
-async function processWithPDFShift(fileBuffer: ArrayBuffer) {
-  const base64 = Buffer.from(fileBuffer).toString("base64");
+//   const response = await fetch(
+//     "https://api.pdfshift.io/v3/convert/pdf-to-text",
+//     {
+//       method: "POST",
+//       headers: {
+//         Authorization: `Basic ${Buffer.from(process.env.PDFSHIFT_API_KEY + ":").toString("base64")}`,
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         source: `data:application/pdf;base64,${base64}`,
+//       }),
+//     }
+//   );
 
-  const response = await fetch(
-    "https://api.pdfshift.io/v3/convert/pdf-to-text",
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${Buffer.from(process.env.PDFSHIFT_API_KEY + ":").toString("base64")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        source: `data:application/pdf;base64,${base64}`,
-      }),
-    }
-  );
+//   if (!response.ok) {
+//     throw new Error("PDFShift processing failed");
+//   }
 
-  if (!response.ok) {
-    throw new Error("PDFShift processing failed");
-  }
-
-  const result = await response.json();
-  return result.text;
-}
+//   const result = await response.json();
+//   return result.text;
+// }
 
 // Option C: Using ILovePDF API (free tier)
 async function processWithILovePDF(fileBuffer: ArrayBuffer) {
@@ -69,6 +68,7 @@ async function processWithILovePDF(fileBuffer: ArrayBuffer) {
   const blob = new Blob([fileBuffer], { type: "application/pdf" });
   formData.append("file", blob);
 
+  //   eslint-disable-next-line @typescript-eslint/no-unused-vars
   const uploadResponse = await fetch(`${server}/upload`, {
     method: "POST",
     headers: {
@@ -77,9 +77,10 @@ async function processWithILovePDF(fileBuffer: ArrayBuffer) {
     body: formData,
   });
 
-  const uploadResult = await uploadResponse.json();
+  //   const uploadResult = await uploadResponse.json();
 
   // Process
+  //   eslint-disable-next-line @typescript-eslint/no-unused-vars
   const processResponse = await fetch(`${server}/process`, {
     method: "POST",
     headers: {
@@ -92,7 +93,7 @@ async function processWithILovePDF(fileBuffer: ArrayBuffer) {
     }),
   });
 
-  const processResult = await processResponse.json();
+  //   const processResult = await processResponse.json();
 
   // Download result
   const downloadResponse = await fetch(`${server}/download/${task}`, {

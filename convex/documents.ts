@@ -1,4 +1,4 @@
-import { ConvexError, v } from "convex/values";
+import { v } from "convex/values";
 // import { Id } from "@/convex/_generated/dataModel";
 import {
   internalMutation,
