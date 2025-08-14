@@ -20,7 +20,7 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { LoadingBtn } from "@/components/loading-btn";
 // import { getDocumentProxy } from "unpdf";
-import { PDFDocument } from "pdf-lib";
+// import { PDFDocument } from "pdf-lib";
 
 const formSchema = z.object({
   title: z
@@ -30,20 +30,20 @@ const formSchema = z.object({
   content: z.string().min(1, { message: "Content is required." }),
 });
 
-async function extractPDFText(file: File) {
-  const arrayBuffer = await file.arrayBuffer();
-  const pdfDoc = await PDFDocument.load(arrayBuffer);
-  let text = "";
+// async function extractPDFText(file: File) {
+//   const arrayBuffer = await file.arrayBuffer();
+//   const pdfDoc = await PDFDocument.load(arrayBuffer);
+//   let text = "";
 
-  const pages = pdfDoc.getPages();
-  for (const page of pages) {
-    text += page.getTextContent?.() ?? ""; // Needs text extraction helper
-  }
+//   const pages = pdfDoc.getPages();
+//   for (const page of pages) {
+//     text += page.getTextContent?.() ?? ""; // Needs text extraction helper
+//   }
 
-  console.log(text);
+//   console.log(text);
 
-  return text;
-}
+//   return text;
+// }
 
 export function UploadDocumentForm({
   toggleDialog,
@@ -73,7 +73,8 @@ export function UploadDocumentForm({
       let content = "";
 
       if (file.type === "application/pdf") {
-        content = await extractPDFText(file);
+        // content = await extractPDFText(file);
+        return;
       } else {
         content = await file.text();
       }
