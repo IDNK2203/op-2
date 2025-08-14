@@ -10,11 +10,15 @@ import { Button } from "@/components/ui/button";
 
 export default function NotePage() {
   const { noteId } = useParams<{ noteId: Id<"note"> }>();
-  const note = useQuery(api.notes.fetchNoteById, {
-    noteId: noteId,
-  });
+  const note = useQuery(api.notes.fetchNoteById, { noteId });
 
-  if (!note) {
+  // ✅ 1. Loading state
+  if (typeof note === "undefined") {
+    return <NoteSkeleton />;
+  }
+
+  // ✅ 2. Not found state
+  if (note === null) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
@@ -32,6 +36,7 @@ export default function NotePage() {
     );
   }
 
+  // ✅ 3. Found state
   return (
     <div className="bg-white rounded-xl border border-[#35174D]/10 overflow-hidden">
       {/* Note Header */}
@@ -109,6 +114,43 @@ export default function NotePage() {
             <span>Auto-saved</span>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* --------------------
+   Note Skeleton Loader
+-------------------- */
+function NoteSkeleton() {
+  return (
+    <div className="bg-white rounded-xl border border-[#35174D]/10 overflow-hidden animate-pulse">
+      {/* Header skeleton */}
+      <div className="border-b border-[#35174D]/10 p-6 flex justify-between">
+        <div className="flex gap-4">
+          <div className="w-12 h-12 bg-slate-200 rounded-xl"></div>
+          <div className="space-y-2">
+            <div className="h-5 w-40 bg-slate-200 rounded"></div>
+            <div className="h-4 w-60 bg-slate-100 rounded"></div>
+          </div>
+        </div>
+        <div className="flex gap-3">
+          <div className="h-8 w-16 bg-slate-200 rounded"></div>
+          <div className="h-8 w-16 bg-slate-200 rounded"></div>
+        </div>
+      </div>
+
+      {/* Content skeleton */}
+      <div className="p-6 space-y-3">
+        <div className="h-4 bg-slate-100 rounded w-full"></div>
+        <div className="h-4 bg-slate-100 rounded w-5/6"></div>
+        <div className="h-4 bg-slate-100 rounded w-4/5"></div>
+        <div className="h-4 bg-slate-100 rounded w-2/3"></div>
+      </div>
+
+      {/* Footer skeleton */}
+      <div className="border-t border-[#35174D]/10 px-6 py-4 bg-slate-50">
+        <div className="h-3 w-48 bg-slate-100 rounded"></div>
       </div>
     </div>
   );

@@ -60,7 +60,7 @@ export default function DeleteDocumentBtn({ id }: { id: Id<"document"> }) {
                 await DeleteDocumentHandler({ documentId: id });
                 // setIsOpen(false);
                 setIsLoading(false);
-                router.push("/");
+                router.push("/dashboard");
               } catch (error) {
                 console.log(error);
               }

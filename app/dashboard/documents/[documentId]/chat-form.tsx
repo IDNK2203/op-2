@@ -28,7 +28,7 @@ const formSchema = z.object({
 });
 
 export function ChatForm({ id }: { id: Id<"document"> }) {
-  const askDocument = useAction(api.documents.askDocument);
+  const askDocument = useAction(api.documentActions.askDocument);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

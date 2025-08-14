@@ -69,7 +69,7 @@ export default function SearchPage() {
             </div>
           )}
 
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {Array.isArray(results) ? (
               results.length > 0 ? (
                 results.map((result, i) => {

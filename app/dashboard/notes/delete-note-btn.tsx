@@ -31,7 +31,7 @@ export default function DeleteNoteBtn({ id }: { id: Id<"note"> }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant={"destructive"} className="absolute -top-3 -right-3">
+        <Button variant={"destructive"} className="">
           <Trash2Icon />
         </Button>
       </DialogTrigger>
