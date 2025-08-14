@@ -45,7 +45,9 @@ export async function getFileText(file: Blob) {
 export async function extractTextFromPdf(file: Blob) {
   try {
     // Try Google Document AI first
-    return await processWithGoogleDocumentAI(file);
+    const r = await processWithGoogleDocumentAI(file);
+    console.log("Google Document AI result:", r);
+    return r;
   } catch (error) {
     console.error("External PDF processing failed:", error);
 
